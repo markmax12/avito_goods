@@ -15,7 +15,7 @@ extension String {
         arrStr.reverse()
         let sign = arrStr[0]
         arrStr.removeFirst(2)
-        var arrStrCount = arrStr.count
+        let arrStrCount = arrStr.count
         var res = [Character]()
         
         for i in 0 ..< arrStrCount {

@@ -10,10 +10,6 @@ import Foundation
 public enum HTTPMethod: String {
     case GET
     case POST
-    case HEAD
-    case PUT
-    case DELETE
-    case PATCH
 }
 
 public enum HTTPScheme {

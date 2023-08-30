@@ -32,6 +32,8 @@ class ItemDetailsRootView: UIView {
         containerView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(scrollView)
         scrollView.addSubview(containerView)
+        scrollView.isScrollEnabled = true
+        scrollView.isUserInteractionEnabled = true
         
         let frameGuide = scrollView.frameLayoutGuide
         let contentGuide = scrollView.contentLayoutGuide

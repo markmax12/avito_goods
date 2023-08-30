@@ -114,7 +114,6 @@ class ItemDetailsContainer: UIView {
             itemImageView.leadingAnchor.constraint(equalTo: layoutMarginsGuide.leadingAnchor),
             itemImageView.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor),
             itemImageView.topAnchor.constraint(equalTo: layoutMarginsGuide.topAnchor),
-            itemImageView.bottomAnchor.constraint(equalTo: layoutMarginsGuide.bottomAnchor),
             itemImageView.widthAnchor.constraint(equalTo: layoutMarginsGuide.widthAnchor),
             itemImageView.heightAnchor.constraint(equalTo: itemImageView.widthAnchor, multiplier: 0.5),
             
@@ -147,6 +146,7 @@ class ItemDetailsContainer: UIView {
             itemDatePublishedLabel.topAnchor.constraint(
                 equalTo: itemDescriptionStackView.bottomAnchor,
                 constant: Constants.sectionSpacing),
+            itemDatePublishedLabel.bottomAnchor.constraint(equalTo: layoutMarginsGuide.bottomAnchor)
         ])
         
     }
