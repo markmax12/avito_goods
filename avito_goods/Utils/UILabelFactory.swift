@@ -31,8 +31,33 @@ extension UILabel {
     ) -> UILabel {
         let label = UILabel()
         let font = UIFont.preferredFont(forTextStyle: style)
-        font.withSize(font.pointSize * scaleFactor)
-        label.font = font
+        let descriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: style)
+        label.font = UIFont(descriptor: descriptor, size: font.pointSize * scaleFactor)
+        label.adjustsFontForContentSizeCategory = true
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.numberOfLines = numberOfLines
+        label.textColor = textColor
+        return label
+    }
+    
+    public static func makeScaledBoldedLabel(
+        style: UIFont.TextStyle,
+        numberOfLines: Int = 0,
+        textColor: UIColor = .black,
+        scaleFactor: CGFloat,
+        bolded: Bool = true
+    ) -> UILabel {
+        let label = UILabel()
+        let font = UIFont.preferredFont(forTextStyle: style)
+        let descriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: style)
+        if bolded {
+            if let boldedDescriptor = descriptor.withSymbolicTraits(.traitBold) {
+                label.font = UIFont(descriptor: boldedDescriptor, size: font.pointSize * scaleFactor)
+            } else {
+                label.font = UIFont(descriptor: descriptor, size: font.pointSize * scaleFactor)
+
+            }
+        }
         label.adjustsFontForContentSizeCategory = true
         label.translatesAutoresizingMaskIntoConstraints = false
         label.numberOfLines = numberOfLines

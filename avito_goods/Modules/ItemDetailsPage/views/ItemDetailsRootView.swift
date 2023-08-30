@@ -12,10 +12,9 @@ class ItemDetailsRootView: UIView {
 
     private var containerView = ItemDetailsContainer(frame: .zero)
     
-    private lazy var scrollView: UIScrollView = {
+    private var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.translatesAutoresizingMaskIntoConstraints = false
-        scrollView.addSubview(containerView)
         return scrollView
     }()
     //TODO: SCROLL VIEW IS NOT WORKING PROPERLY
@@ -32,6 +31,7 @@ class ItemDetailsRootView: UIView {
     private func configureSubviews() {
         containerView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(scrollView)
+        scrollView.addSubview(containerView)
         
         let frameGuide = scrollView.frameLayoutGuide
         let contentGuide = scrollView.contentLayoutGuide

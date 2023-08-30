@@ -21,16 +21,16 @@ class ItemDetailsContainer: UIView {
         return imageView
     }()
     
-    private var itemPriceLabel = UILabel.makeScaledLabel(style: .headline, numberOfLines: 1, scaleFactor: 2)
-    private var itemTitleLabel = UILabel.makeScaledLabel(style: .subheadline, scaleFactor: 2)
-    private var itemLocationLabel = UILabel.makeLabel(style: .footnote)
+    private var itemPriceLabel = UILabel.makeScaledLabel(style: .headline, numberOfLines: 1, scaleFactor: 1.5)
+    private var itemTitleLabel = UILabel.makeScaledBoldedLabel(style: .subheadline, scaleFactor: 1.2)
+    private var itemLocationLabel = UILabel.makeLabel(style: .body)
     
     private lazy var itemInfoLabelsStackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [itemPriceLabel, itemTitleLabel, itemLocationLabel])
+        let stackView = UIStackView(arrangedSubviews: [itemPriceLabel, itemTitleLabel])
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical
         stackView.distribution = .fill
-        stackView.spacing = UIStackView.spacingUseSystem
+        stackView.spacing = Constants.titleAndBodyGroupSpacing
         return stackView
     }()
     
@@ -71,21 +71,21 @@ class ItemDetailsContainer: UIView {
         textView.font = UIFont.preferredFont(forTextStyle: .body)
         textView.adjustsFontForContentSizeCategory = true
         textView.isScrollEnabled = false
+        textView.textContainerInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         textView.isEditable = false
         textView.textContainer.lineFragmentPadding = 0
         return textView
     }()
     
-    private lazy var itemDescriptionStackView: UIStackView = {
-        let descriptionTitleLabel = UILabel.makeLabel(style: .headline)
-        descriptionTitleLabel.text = "Описание"
-        
-        let stackView = UIStackView(arrangedSubviews: [descriptionTitleLabel, descritionBodyText])
-        stackView.axis = .vertical
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        stackView.spacing = Constants.titleAndBodyGroupSpacing
-        return stackView
-    }()
+    private lazy var itemLocationStackView = UIStackView.titleAndBodyTextContainer(
+        title: "Адрес",
+        body: itemLocationLabel,
+        spacing: Constants.titleAndBodyGroupSpacing)
+    
+    private lazy var itemDescriptionStackView = UIStackView.titleAndBodyTextContainer(
+        title: "Описание",
+        body: descritionBodyText,
+        spacing: Constants.titleAndBodyGroupSpacing)
 
     private var itemDatePublishedLabel = UILabel.makeLabel(style: .caption1, textColor: .systemGray)
     
@@ -105,6 +105,7 @@ class ItemDetailsContainer: UIView {
             itemImageView,
             itemInfoLabelsStackView,
             communicationButtonsStackView,
+            itemLocationStackView,
             itemDescriptionStackView,
             itemDatePublishedLabel
         ])
@@ -129,10 +130,16 @@ class ItemDetailsContainer: UIView {
                 equalTo: itemInfoLabelsStackView.bottomAnchor,
                 constant: Constants.sectionSpacing),
             
+            itemLocationStackView.leadingAnchor.constraint(equalTo: layoutMarginsGuide.leadingAnchor),
+            itemLocationStackView.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor),
+            itemLocationStackView.topAnchor.constraint(
+                equalTo: communicationButtonsStackView.bottomAnchor,
+                constant: Constants.sectionSpacing),
+            
             itemDescriptionStackView.leadingAnchor.constraint(equalTo: readableContentGuide.leadingAnchor),
             itemDescriptionStackView.trailingAnchor.constraint(equalTo: readableContentGuide.trailingAnchor),
             itemDescriptionStackView.topAnchor.constraint(
-                equalTo: communicationButtonsStackView.bottomAnchor,
+                equalTo: itemLocationStackView.bottomAnchor,
                 constant: Constants.sectionSpacing),
             
             itemDatePublishedLabel.leadingAnchor.constraint(equalTo: layoutMarginsGuide.leadingAnchor),
@@ -140,13 +147,13 @@ class ItemDetailsContainer: UIView {
             itemDatePublishedLabel.topAnchor.constraint(
                 equalTo: itemDescriptionStackView.bottomAnchor,
                 constant: Constants.sectionSpacing),
-            itemDatePublishedLabel.bottomAnchor.constraint(greaterThanOrEqualTo: layoutMarginsGuide.bottomAnchor)
         ])
+        
     }
     
     public func propagateSubviews(with data: ItemDetails) async {
-        print("propagating data")
-        itemPriceLabel.text = data.price
+        //TODO: PROBABLY SHOULD DO IT SOMEWHERE IN VIEWMODEL
+        itemPriceLabel.text = data.price.formatPriceString()
         itemTitleLabel.text = data.title
         itemLocationLabel.text = data.location + ", \(data.address)"
         descritionBodyText.text = data.description
@@ -162,7 +169,7 @@ class ItemDetailsContainer: UIView {
         }
         
         static let sectionSpacing: CGFloat = 20
-        static let titleAndBodyGroupSpacing: CGFloat = 2
+        static let titleAndBodyGroupSpacing: CGFloat = 8
     }
 
 }
