@@ -158,7 +158,8 @@ class ItemDetailsContainer: UIView {
         itemLocationLabel.text = data.location + ", \(data.address)"
         descritionBodyText.text = data.description
         itemDatePublishedLabel.text = "Опубликовано: " + data.createdDate
-        await itemImageView.loadImagefromURLIfNeeded(data.imageURL)
+        //TODO: DATE FORMATTER SOMEWHERE IN THE VIEWMODEL
+        //await itemImageView.loadImagefromURLIfNeeded(data.imageURL)
     }
     
     private enum Constants {

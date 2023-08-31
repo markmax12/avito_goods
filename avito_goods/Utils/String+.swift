@@ -15,14 +15,16 @@ extension String {
         arrStr.reverse()
         let sign = arrStr[0]
         arrStr.removeFirst(2)
-        let arrStrCount = arrStr.count
+        var arrStrCount = arrStr.count
         var res = [Character]()
         
         for i in 0 ..< arrStrCount {
-            if i % 3 == 0 && i != arrStrCount - 1 {
+            if i % 3 == 0 && i != arrStrCount, i != 0 {
                 res += " "
             }
+            
             res.append(arrStr[i])
+            
         }
         
         res.reverse()

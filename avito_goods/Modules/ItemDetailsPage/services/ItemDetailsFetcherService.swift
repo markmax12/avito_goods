@@ -16,9 +16,16 @@ protocol ItemDetailsFetcherServiceProtocol {
 public final class ItemDetailsFetcherService: ItemDetailsFetcherServiceProtocol {
     
     let networkManager: any NetworkManagerProtocol
+    let itemId: String
     
-    init(networkManager: any NetworkManagerProtocol) {
+    init(networkManager: any NetworkManagerProtocol, itemId: String) {
         self.networkManager = networkManager
+        self.itemId = itemId
+    }
+    
+    public func itemDetails() async throws -> ItemDetails {
+        let request = GoodsRequest.detailsPage(itemId: itemId)
+        return try await networkManager.send(request: request)
     }
     
     public func itemDetails(for itemID: String) async throws -> ItemDetails {

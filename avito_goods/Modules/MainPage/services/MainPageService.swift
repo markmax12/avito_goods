@@ -12,11 +12,11 @@ protocol MainPageServiceProtocol {
     func advertisement() async throws -> MainPageResponse
 }
 
-final public class MainPageService: MainPageServiceProtocol {
+final class MainPageService<T: NetworkManagerProtocol>: MainPageServiceProtocol {
     
-    let networkManager: NetworkManager
+    let networkManager: T
     
-    init(networkManager: NetworkManager) {
+    init(networkManager: T) {
         self.networkManager = networkManager
     }
     

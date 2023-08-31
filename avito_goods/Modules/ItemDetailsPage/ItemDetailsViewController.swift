@@ -23,11 +23,12 @@ class ItemDetailsViewController: UIViewController {
     }
     
     var rootView: ItemDetailsRootView!
+    var viewModel: ItemDetailViewModel
+    var coordinator: Coordinator
     
-    let itemDetailsFetcherService: any ItemDetailsFetcherServiceProtocol
-    
-    init(itemDetailsFetcherService: any ItemDetailsFetcherServiceProtocol) {
-        self.itemDetailsFetcherService = itemDetailsFetcherService
+    init(viewModel: ItemDetailViewModel, coordinator: Coordinator) {
+        self.viewModel = viewModel
+        self.coordinator = coordinator
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -56,8 +57,8 @@ class ItemDetailsViewController: UIViewController {
     
     private func loadItemDetails() async throws {
         guard let itemId else { return }
-        let itemDetails = try await itemDetailsFetcherService.itemDetails(for: itemId)
-        await configuireView(with: itemDetails)
+       // let itemDetails = try await itemDetailsFetcherService.itemDetails(for: itemId)
+       // await configuireView(with: itemDetails)
     }
     
     private func configuireView(with itemDetails: ItemDetails) async {

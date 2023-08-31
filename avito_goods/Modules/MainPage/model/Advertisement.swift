@@ -9,12 +9,12 @@
 import Foundation
 
 public struct Advertisement: Codable {
-    let id: String
-    let title: String
-    let price: String
-    let location: String
-    let imageURL: String
-    let createdDate: String
+    public let id: String
+    public let title: String
+    public let price: String
+    public let location: String
+    public let imageURL: String
+    public let createdDate: String
 
     enum CodingKeys: String, CodingKey {
         case id
@@ -33,3 +33,5 @@ extension Advertisement: Equatable {
 }
 
 extension Advertisement: Hashable { }
+
+extension Advertisement: Identifiable { }

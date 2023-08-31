@@ -10,21 +10,16 @@ import UIKit
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
-
+    var appDependencyContainer = AppDependencyContainer()
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let scene = (scene as? UIWindowScene) else { return }
-        
-        let config = Network.Config()
-        let network = Network(config: config)
-        let parser = ResponseDataParser()
-        let networkManager = NetworkManager(network: network, parser: parser)
-        let service = MainPageService(networkManager: networkManager)
-        let viewController = MainPageViewController(dataFetcher: service)
-        let navigationController = UINavigationController(rootViewController: viewController)
-        
+        let coordinator = appDependencyContainer.makeCoordinator()
+        let initialViewController = appDependencyContainer.makeMainPageViewController(coordinator: coordinator)
+        coordinator.embedInitialViewController(initialViewController: initialViewController)
+        let embededNavigationController = coordinator.navigationController
         window = UIWindow(windowScene: scene)
-        window?.rootViewController = navigationController
+        window?.rootViewController = embededNavigationController
         window?.makeKeyAndVisible()
     }
 

@@ -8,10 +8,8 @@
 
 import UIKit
 
-//TODO: ADD LIKE BUTTON IF HAVE TIME
-
 final class ItemCell: UICollectionViewCell {
-        
+            
     private var itemImage: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -30,30 +28,6 @@ final class ItemCell: UICollectionViewCell {
         label.setContentHuggingPriority(.defaultLow, for: .horizontal)
         return label
     }()
-    
-//    private lazy var likeButton: UIButton = {
-//        var config = UIButton.Configuration.plain()
-//        config.image = UIImage(systemName: "heart")
-//        let button = UIButton(type: .system)
-//        button.configuration = config
-//        button.translatesAutoresizingMaskIntoConstraints = false
-//
-//        button.configurationUpdateHandler = { [unowned self] button in
-//            var config = button.configuration
-//            let buttonImage = self.isItemLiked ? "heart.fill" : "heart"
-//            config?.image = UIImage(systemName: buttonImage)
-//            button.configuration = config
-//        }
-//
-//        button.addAction(
-//            UIAction { _ in
-//                if let isLiked = self.didTapButton?() {
-//                    self.isItemLiked = isLiked
-//                }
-//            }, for: .touchUpInside)
-//
-//        return button
-//    }()
     
     private var itemPrice: UILabel = {
         let label = UILabel()
@@ -83,13 +57,7 @@ final class ItemCell: UICollectionViewCell {
         label.textColor = Constants.TextColor.supplementaryContentTextColor
         return label
     }()
-    
-//    private var titleAndLikeButtonContainer: UIView = {
-//        let view = UIView()
-//        view.translatesAutoresizingMaskIntoConstraints = false
-//        return view
-//    }()
-    
+
     lazy private var verticalStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [itemTitle, itemPrice, itemLocation, itemDate])
         stackView.axis = .vertical
@@ -100,14 +68,6 @@ final class ItemCell: UICollectionViewCell {
         return stackView
     }()
     
-//    public var isItemLiked = false {
-//        didSet {
-//            likeButton.setNeedsUpdateConfiguration()
-//        }
-//    }
-//
-//    public var didTapButton: (() -> Bool)?
-    
     override init(frame: CGRect) {
         super.init(frame: frame)
         configureSubviews()
@@ -117,25 +77,13 @@ final class ItemCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-//    private func configureViewContainer() {
-////        titleAndLikeButtonContainer.addSubview(itemTitle)
-////        titleAndLikeButtonContainer.addSubview(likeButton)
-//
-//        NSLayoutConstraint.activate([
-//            itemTitle.leadingAnchor.constraint(equalTo: titleAndLikeButtonContainer.leadingAnchor),
-//            itemTitle.topAnchor.constraint(equalTo: titleAndLikeButtonContainer.topAnchor),
-//            itemTitle.bottomAnchor.constraint(equalTo: titleAndLikeButtonContainer.bottomAnchor),
-//            itemTitle.trailingAnchor.constraint(lessThanOrEqualTo: likeButton.leadingAnchor, constant: 10),
-//
-//            likeButton.topAnchor.constraint(equalTo: titleAndLikeButtonContainer.topAnchor),
-//            likeButton.bottomAnchor.constraint(equalTo: titleAndLikeButtonContainer.bottomAnchor),
-//            likeButton.trailingAnchor.constraint(equalTo: titleAndLikeButtonContainer.trailingAnchor)
-//        ])
-//    }
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        itemImage.image = nil
+    }
     
     private func configureSubviews() {
         contentView.addSubviews([itemImage, verticalStackView])
-        //configureViewContainer()
         
         NSLayoutConstraint.activate([
             itemImage.topAnchor.constraint(equalTo: contentView.topAnchor),
@@ -154,14 +102,12 @@ final class ItemCell: UICollectionViewCell {
         ])
     }
     
-    public func propagateSubviews(with data: Advertisement) async {
-        //TODO: WORKOUT THIS
+    public func propagateSubviews(with data: Advertisement, asset: Asset) {
         itemTitle.text = data.title
         itemPrice.text = data.price
         itemLocation.text = data.location
         itemDate.text = data.createdDate
-        await itemImage.loadImagefromURLIfNeeded(data.imageURL)
-        
+        itemImage.image = asset.image
     }
     
     private enum Constants {

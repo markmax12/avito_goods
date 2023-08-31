@@ -30,7 +30,7 @@ final public class NetworkManager: NetworkManagerProtocol {
         self.parser = parser
     }
     
-    public func send<Response: Decodable>(request: RequestProtocol) async throws -> Response {
+    public func send<Response: Decodable>(request: any RequestProtocol) async throws -> Response {
         let urlRequest = try request.makeURLRequest()
         let data = try await network.send(request: urlRequest)
         let parsedResponse: Response = try parser.parse(networkData: data)
