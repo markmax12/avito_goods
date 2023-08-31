@@ -46,6 +46,7 @@ class MainPageViewController: UIViewController {
     }
     
     private func setupLoader() {
+        loaderView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(loaderView)
         loaderView.frame = view.bounds
     }
@@ -56,7 +57,7 @@ class MainPageViewController: UIViewController {
         collectionView.addRefreshControl(rc: refreshControl)
     }
     
-        private func setupCollectionView() {
+    private func setupCollectionView() {
         view.addSubview(collectionView)
         collectionView.frame = view.bounds
      }

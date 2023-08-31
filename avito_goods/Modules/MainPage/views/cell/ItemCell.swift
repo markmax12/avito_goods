@@ -89,7 +89,7 @@ final class ItemCell: UICollectionViewCell {
     }
     
     private func configureSubviews() {
-        contentView.addSubviews([itemImage, verticalStackView])
+        contentView.addSubviews([itemImage, itemTitle, itemPrice, itemLocation, itemDate])
         
         NSLayoutConstraint.activate([
             itemImage.topAnchor.constraint(equalTo: contentView.topAnchor),
@@ -97,14 +97,22 @@ final class ItemCell: UICollectionViewCell {
             itemImage.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             itemImage.heightAnchor.constraint(equalTo: contentView.widthAnchor),
             
-            verticalStackView.topAnchor.constraint(
-                equalTo: itemImage.bottomAnchor,
-                constant: Constants.Spacing.mainContentSpacing),
-            verticalStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            verticalStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            verticalStackView.bottomAnchor.constraint(
-                equalTo: contentView.bottomAnchor,
-                constant: -Constants.Spacing.supplementaryContentSpacing)
+            itemTitle.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            itemTitle.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            itemTitle.topAnchor.constraint(equalTo: itemImage.bottomAnchor, constant: Constants.Spacing.mainContentSpacing),
+            
+            itemPrice.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            itemPrice.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            itemPrice.topAnchor.constraint(equalTo: itemTitle.bottomAnchor, constant: Constants.Spacing.mainContentSpacing),
+            
+            itemLocation.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            itemLocation.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            itemLocation.topAnchor.constraint(equalTo: itemPrice.bottomAnchor, constant: Constants.Spacing.mainContentSpacing),
+            
+            itemDate.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            itemDate.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            itemDate.topAnchor.constraint(equalTo: itemLocation.bottomAnchor, constant: Constants.Spacing.supplementaryContentSpacing),
+            itemDate.bottomAnchor.constraint(greaterThanOrEqualTo: contentView.bottomAnchor)
         ])
     }
     

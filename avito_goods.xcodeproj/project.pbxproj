@@ -177,6 +177,24 @@
 			path = App;
 			sourceTree = "<group>";
 		};
+		4E5223402AA11A2200901889 /* viewmodel */ = {
+			isa = PBXGroup;
+			children = (
+				4E5223292A9FE7F300901889 /* MainPageViewModel.swift */,
+				4E5223382AA0CE9600901889 /* MainPageViewState.swift */,
+			);
+			path = viewmodel;
+			sourceTree = "<group>";
+		};
+		4E5223412AA11A3000901889 /* viewmodel */ = {
+			isa = PBXGroup;
+			children = (
+				4E52233D2AA0E7F500901889 /* ItemDetailsViewState.swift */,
+				4E52232D2A9FF0EE00901889 /* ItemDetailViewModel.swift */,
+			);
+			path = viewmodel;
+			sourceTree = "<group>";
+		};
 		4E6D8FC22A97D9F00008DD8A /* Core */ = {
 			isa = PBXGroup;
 			children = (
@@ -217,12 +235,11 @@
 		4E6D8FCE2A9A4D160008DD8A /* MainPage */ = {
 			isa = PBXGroup;
 			children = (
+				4E5223402AA11A2200901889 /* viewmodel */,
 				4E6D8FDB2A9BBA680008DD8A /* views */,
 				4E6D8FD72A9BA2130008DD8A /* services */,
 				4E6D8FD02A9A4D2F0008DD8A /* model */,
 				4E6D90082A9D1C530008DD8A /* MainPageViewController.swift */,
-				4E5223292A9FE7F300901889 /* MainPageViewModel.swift */,
-				4E5223382AA0CE9600901889 /* MainPageViewState.swift */,
 			);
 			path = MainPage;
 			sourceTree = "<group>";
@@ -230,12 +247,11 @@
 		4E6D8FCF2A9A4D270008DD8A /* ItemDetailsPage */ = {
 			isa = PBXGroup;
 			children = (
+				4E5223412AA11A3000901889 /* viewmodel */,
 				4E6D901B2A9E57820008DD8A /* views */,
 				4E6D90142A9E4E910008DD8A /* services */,
 				4E6D8FD32A9BA0450008DD8A /* model */,
 				4E6D90172A9E52550008DD8A /* ItemDetailsViewController.swift */,
-				4E52232D2A9FF0EE00901889 /* ItemDetailViewModel.swift */,
-				4E52233D2AA0E7F500901889 /* ItemDetailsViewState.swift */,
 			);
 			path = ItemDetailsPage;
 			sourceTree = "<group>";
