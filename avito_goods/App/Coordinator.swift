@@ -24,15 +24,9 @@ public final class Coordinator {
     }
 }
 
-extension Coordinator: MainPageCollectionViewDelegate {
-    func mainPageCollectionView(collectionView: MainPageCollectionView, didSelectItemAt id: String) {
+extension Coordinator {
+    func pushItemDetailsController(with id: String) {
         let itemDetailViewController = appContainer.makeItemDetailsViewController(id: id, coordinator: self)
         navigationController.pushViewController(itemDetailViewController, animated: true)
-    }
-}
-
-extension Coordinator {
-    func popViewController() {
-        navigationController.popViewController(animated: true)
     }
 }

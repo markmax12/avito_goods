@@ -11,6 +11,9 @@ import Foundation
 protocol NetworkProtocol {
         
     func send(request: URLRequest) async throws -> Data
+    
+    func send(request: URLRequest, completionHandler: @escaping (Result<Data, NetworkError>) -> Void)
+
 }
 
 public final class Network: NetworkProtocol {
@@ -43,5 +46,26 @@ public final class Network: NetworkProtocol {
         }
         
         return data
+    }
+    
+    public func send(request: URLRequest, completionHandler: @escaping (Result<Data, NetworkError>) -> Void) {
+        let session = config.urlSession
+        let task = session.dataTask(with: request, completionHandler: { data, response, error in
+            if let error {
+                completionHandler(.failure(NetworkError.genericError(error: error)))
+            } else {
+                guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
+                    completionHandler(.failure(NetworkError.badResponse(responseCode: (response as! HTTPURLResponse).statusCode)))
+                    return
+                }
+                
+                if let data {
+                    completionHandler(.success(data))
+                } else {
+                    completionHandler(.failure(NetworkError.badData))
+                }
+            }
+        })
+        task.resume()
     }
 }

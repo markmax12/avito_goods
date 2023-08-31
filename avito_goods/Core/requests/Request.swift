@@ -23,7 +23,7 @@ public protocol RequestProtocol {
     var headers: HTTPHeaders { get }
     
     var body: Data? { get }
-    
+        
     var timeOutInterval: Double { get }
 }
 
@@ -44,6 +44,7 @@ extension RequestProtocol {
     public var timeOutInterval: Double {
         return 15
     }
+    
 }
 
 extension RequestProtocol {
@@ -57,7 +58,7 @@ extension RequestProtocol {
         if !request.urlParameters.isEmpty {
             components.queryItems = request.urlParameters
         }
-        
+                
         return components.url
     }
     

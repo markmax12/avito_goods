@@ -8,32 +8,29 @@
 
 import Foundation
 
-enum GoodsRequest: RequestProtocol {    
+public enum GoodsRequest: RequestProtocol {
     
     case mainPage
     case detailsPage(itemId: String)
-    case imageFetch(id: String)
 
-    var method: HTTPMethod {
+    public var method: HTTPMethod {
         return .GET
     }
     
-    var scheme: HTTPScheme {
+    public var scheme: HTTPScheme {
         return .https
     }
     
-    var host: String {
+    public var host: String {
         return "avito.st"
     }
     
-    var path: String {
+    public var path: String {
         switch self {
             case .mainPage:
                 return "/s/interns-ios/main-page.json"
             case .detailsPage(let itemId):
                 return "/s/interns-ios/details/\(itemId).json"
-            case .imageFetch(let id):
-                return "s/interns-ios/images/\(id).png"
         }
     }
     

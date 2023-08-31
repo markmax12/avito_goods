@@ -8,7 +8,17 @@
 
 import UIKit
 
+protocol InteractiveCommunicationButtonsDelegate: AnyObject {
+    
+    func didPressEmailButton(email: String?)
+    func didPresCallButton(phoneNumber: String?)
+}
+
 class ItemDetailsContainer: UIView {
+    
+    private var credentials: (email: String, phoneNumber: String)?
+    
+    weak var delegate: (any InteractiveCommunicationButtonsDelegate)?
 
     private var itemImageView: UIImageView = {
         let imageView = UIImageView()
@@ -16,8 +26,6 @@ class ItemDetailsContainer: UIView {
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         imageView.layer.cornerRadius = 4
-        imageView.setContentCompressionResistancePriority(.defaultLow - 100, for: .vertical)
-        imageView.setContentHuggingPriority(.defaultHigh, for: .vertical)
         return imageView
     }()
     
@@ -34,25 +42,29 @@ class ItemDetailsContainer: UIView {
         return stackView
     }()
     
-    private var callButton: UIButton = {
+    private lazy var callButton: UIButton = {
         let button = UIButton(type: .custom)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("Позвонить", for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.backgroundColor = Constants.Colors.callButtonColor
         button.layer.cornerRadius = 10
-        //TODO: Implement call pop-up
+        button.addAction(UIAction { _ in
+            self.didPressCallButton()
+        }, for: .touchUpInside)
         return button
     }()
     
-    private var emailButton: UIButton = {
+    private lazy var emailButton: UIButton = {
         let button = UIButton(type: .custom)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("Написать", for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.backgroundColor = Constants.Colors.emailButtonColor
         button.layer.cornerRadius = 10
-        //TODO: Implement email pop-up
+        button.addAction(UIAction { _ in
+            self.didPressEmailButton()
+        }, for: .touchUpInside)
         return button
     }()
     
@@ -98,6 +110,13 @@ class ItemDetailsContainer: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    private func didPressEmailButton() {
+        delegate?.didPressEmailButton(email: credentials?.email)
+    }
+    
+    private func didPressCallButton() {
+        delegate?.didPresCallButton(phoneNumber: credentials?.phoneNumber)
+    }
     
     private func configureSubviews() {
         backgroundColor = .white
@@ -115,7 +134,7 @@ class ItemDetailsContainer: UIView {
             itemImageView.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor),
             itemImageView.topAnchor.constraint(equalTo: layoutMarginsGuide.topAnchor),
             itemImageView.widthAnchor.constraint(equalTo: layoutMarginsGuide.widthAnchor),
-            itemImageView.heightAnchor.constraint(equalTo: itemImageView.widthAnchor, multiplier: 0.5),
+            itemImageView.heightAnchor.constraint(equalTo: layoutMarginsGuide.widthAnchor),
             
             itemInfoLabelsStackView.leadingAnchor.constraint(equalTo: layoutMarginsGuide.leadingAnchor),
             itemInfoLabelsStackView.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor),
@@ -151,15 +170,16 @@ class ItemDetailsContainer: UIView {
         
     }
     
-    public func propagateSubviews(with data: ItemDetails) async {
-        //TODO: PROBABLY SHOULD DO IT SOMEWHERE IN VIEWMODEL
-        itemPriceLabel.text = data.price.formatPriceString()
+    public func propagateSubviews(with data: ItemDetails) {
+        guard let url = URL(string: data.imageURL) else { return }
+        itemImageView.kf.indicatorType = .activity
+        itemImageView.kf.setImage(with: url)
+        itemPriceLabel.text = data.price
         itemTitleLabel.text = data.title
         itemLocationLabel.text = data.location + ", \(data.address)"
         descritionBodyText.text = data.description
-        itemDatePublishedLabel.text = "Опубликовано: " + data.createdDate
-        //TODO: DATE FORMATTER SOMEWHERE IN THE VIEWMODEL
-        //await itemImageView.loadImagefromURLIfNeeded(data.imageURL)
+        itemDatePublishedLabel.text = data.createdDate
+        credentials = (data.email, data.phoneNumber)
     }
     
     private enum Constants {

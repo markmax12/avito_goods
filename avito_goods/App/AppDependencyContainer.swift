@@ -18,12 +18,6 @@ public final class AppDependencyContainer {
         return networkManager
     }()
     
-    private lazy var assetStore: AssetStore = {
-        let cache = InMemoryCache()
-        let assetStore = AssetStore(cache: cache, networkManager: networkManager)
-        return assetStore
-    }()
-    
     func makeCoordinator() -> Coordinator {
         let navigationController = UINavigationController()
         return Coordinator(appContainer: self, navigationController: navigationController)
@@ -32,14 +26,16 @@ public final class AppDependencyContainer {
     func makeMainPageViewController(coordinator: Coordinator) -> MainPageViewController {
         let mainPageService = MainPageService(networkManager: networkManager)
         let mainPageViewModel = MainPageViewModel(mainPageDataService: mainPageService)
-        let advertisementStore = ModelStore<Advertisement>()
-        let collectionView = MainPageCollectionView(assetStore: assetStore, advertisementStore: advertisementStore)
-        return MainPageViewController(mainPageViewModel: mainPageViewModel, collectionView: collectionView, coordinator: coordinator)
+        let collectionView = MainPageCollectionView()
+        let loaderView = LoaderView()
+        let refreshControl = UIRefreshControl()
+        return MainPageViewController(mainPageViewModel: mainPageViewModel, collectionView: collectionView, coordinator: coordinator, loaderView: loaderView, refreshControl: refreshControl)
     }
     
     func makeItemDetailsViewController(id: String, coordinator: Coordinator) -> ItemDetailsViewController {
         let itemDetailsService = ItemDetailsFetcherService(networkManager: networkManager, itemId: id)
         let itemDetailsViewModel = ItemDetailViewModel(itemDetailsFetcherService: itemDetailsService)
-        return ItemDetailsViewController(viewModel: itemDetailsViewModel, coordinator: coordinator)
+        let loaderView = LoaderView()
+        return ItemDetailsViewController(viewModel: itemDetailsViewModel, coordinator: coordinator, loaderView: loaderView)
     }
 }

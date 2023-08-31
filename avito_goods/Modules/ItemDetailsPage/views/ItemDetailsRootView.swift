@@ -17,13 +17,11 @@ class ItemDetailsRootView: UIView {
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         return scrollView
     }()
-    //TODO: SCROLL VIEW IS NOT WORKING PROPERLY
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         configureSubviews()
     }
-    //TODO: REMOVE THIS IN SUBCLASS IF HAVE TIME
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -53,7 +51,11 @@ class ItemDetailsRootView: UIView {
         ])
     }
     
-    public func propagateView(with data: ItemDetails) async {
-        await containerView.propagateSubviews(with: data)
+    public func propagateView(with data: ItemDetails) {
+        containerView.propagateSubviews(with: data)
+    }
+    
+    public func setInteractiveButtonsDelegate(delegate: (any InteractiveCommunicationButtonsDelegate)?) {
+        containerView.delegate = delegate
     }
 }

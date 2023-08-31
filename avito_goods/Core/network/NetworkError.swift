@@ -13,7 +13,7 @@ public enum NetworkError: Error {
     case badRequest
     case noResponse
     case badData
-    case genericError
+    case genericError(error: Error)
     case noConnection
 }
 

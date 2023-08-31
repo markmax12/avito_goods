@@ -15,13 +15,19 @@ class MainPageViewController: UIViewController {
     private var collectionView: MainPageCollectionView
     private var coordinator: Coordinator
     private var subscriptions = Set<AnyCancellable>()
+    private var loaderView: LoaderView
+    private var refreshControl: UIRefreshControl
     
     init(mainPageViewModel: MainPageViewModel,
          collectionView: MainPageCollectionView,
-         coordinator: Coordinator) {
+         coordinator: Coordinator,
+         loaderView: LoaderView,
+         refreshControl: UIRefreshControl) {
         self.mainPageViewModel = mainPageViewModel
         self.collectionView = collectionView
         self.coordinator = coordinator
+        self.loaderView = loaderView
+        self.refreshControl = refreshControl
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -31,35 +37,93 @@ class MainPageViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        bindCoordinatorToCollectionView()
-        bindViewModelToView()
-        setupCollectionView()
+        title = "Объявления"
+        setupRefreshControler()
+        bindToViewState()
+        bindCollectionViewToViewModel()
         mainPageViewModel.fetchData()
+        collectionView.delegate = self
     }
     
-    private func setupCollectionView() {
-        collectionView.frame = view.bounds
+    private func setupLoader() {
+        view.addSubview(loaderView)
+        loaderView.frame = view.bounds
+    }
+    
+    private func setupRefreshControler() {
+        refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: #selector(handleRefresh), for: .valueChanged)
+        collectionView.addRefreshControl(rc: refreshControl)
+    }
+    
+        private func setupCollectionView() {
         view.addSubview(collectionView)
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
-        
-        NSLayoutConstraint.activate([
-            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            collectionView.topAnchor.constraint(equalTo: view.topAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
-        ])
+        collectionView.frame = view.bounds
+     }
+    
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        setupCollectionView()
+        setupLoader()
     }
     
-    private func bindCoordinatorToCollectionView() {
-        collectionView.delegate = coordinator
-    }
-    
-    private func bindViewModelToView() {
+    private func bindCollectionViewToViewModel() {
         mainPageViewModel
             .$ads
             .receive(on: DispatchQueue.main)
-            .sink { [collectionView] ads in
-                collectionView.addModels(ads)
+            .sink { [collectionView, refreshControl] _ in
+                refreshControl.endRefreshing()
+                collectionView.reloadData()
             }.store(in: &subscriptions)
+    }
+    
+    private func bindToViewState() {
+        mainPageViewModel
+            .$view
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] state in
+                self?.respondToStateChange(state: state)
+            }.store(in: &subscriptions)
+    }
+    
+    private func respondToStateChange(state: MainPageViewState) {
+        switch state {
+            case .loading:
+                collectionView.isHidden = true
+                loaderView.startAnimating()
+            case .presenting:
+                loaderView.stopAnimating()
+                collectionView.isHidden = false
+            case .error(let error):
+                collectionView.isHidden = true
+                present(error) { [collectionView] in
+                    collectionView.isHidden = false
+                }
+        }
+    }
+    
+    @objc
+    private func handleRefresh() {
+        mainPageViewModel.fetchData()
+    }
+}
+
+extension MainPageViewController: MainPageCollectionViewDelegate {
+    
+    var numberOfItems: Int {
+        return mainPageViewModel.ads.count
+    }
+    
+    func mainPageCollectionView(collectionView: MainPageCollectionView, didSelectItemAt id: String) {
+        coordinator.pushItemDetailsController(with: id)
+    }
+    
+    func prepareForReuse(with cell: ItemCell, at indexPath: IndexPath) {
+        let item = mainPageViewModel.ads[indexPath.row]
+        collectionView.configureCellContent(cell, item)
+    }
+    
+    func presentError(error: Error) {
+        present(error, nil)
     }
 }

@@ -7,8 +7,11 @@
 //
 
 import UIKit
+import Kingfisher
 
 final class ItemCell: UICollectionViewCell {
+    
+    public var id: String?
             
     private var itemImage: UIImageView = {
         let imageView = UIImageView()
@@ -25,7 +28,6 @@ final class ItemCell: UICollectionViewCell {
         label.numberOfLines = 2
         label.font = UIFont.preferredFont(forTextStyle: .callout)
         label.adjustsFontForContentSizeCategory = true
-        label.setContentHuggingPriority(.defaultLow, for: .horizontal)
         return label
     }()
     
@@ -80,6 +82,10 @@ final class ItemCell: UICollectionViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         itemImage.image = nil
+        itemTitle.text = nil
+        itemPrice.text = nil
+        itemLocation.text = nil
+        itemDate.text = nil
     }
     
     private func configureSubviews() {
@@ -102,12 +108,13 @@ final class ItemCell: UICollectionViewCell {
         ])
     }
     
-    public func propagateSubviews(with data: Advertisement, asset: Asset) {
+    public func propagateSubviews(with data: Advertisement) {
         itemTitle.text = data.title
         itemPrice.text = data.price
         itemLocation.text = data.location
         itemDate.text = data.createdDate
-        itemImage.image = asset.image
+        itemImage.kf.indicatorType = .activity
+        itemImage.kf.setImage(with: URL(string: data.imageURL)!)
     }
     
     private enum Constants {

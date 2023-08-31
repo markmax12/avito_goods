@@ -9,8 +9,8 @@
 import Foundation
 
 protocol ItemDetailsFetcherServiceProtocol {
-    
     func itemDetails(for: String) async throws -> ItemDetails
+    func itemDetails() async throws -> ItemDetails
 }
 
 public final class ItemDetailsFetcherService: ItemDetailsFetcherServiceProtocol {
